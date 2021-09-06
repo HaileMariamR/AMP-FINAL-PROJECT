@@ -39,24 +39,24 @@ class HolyPlace extends StatelessWidget {
             Expanded(
                 child: CustomTextField(
                     textEditingController: hollyPlaceController,
-                    hinttext: "Enter name of holyplace",
+                    labelText: "Enter name of holyplace",
                     icondata: Icon(Icons.place))),
             Expanded(
                 child: CustomTextField(
               textEditingController: locationController,
-              hinttext: "Enter location ",
+              labelText: "Enter location ",
               icondata: Icon(Icons.location_city),
             )),
             Expanded(
                 child: CustomTextField(
               textEditingController: historyController,
-              hinttext: "Enter  History",
+              labelText: "Enter  History",
               icondata: Icon(Icons.history),
             )),
             Expanded(
                 child: CustomTextField(
               textEditingController: imageUrlController,
-              hinttext: "Enter Image URL",
+              labelText: "Enter Image URL",
               icondata: Icon(Icons.image),
             )),
             Expanded(

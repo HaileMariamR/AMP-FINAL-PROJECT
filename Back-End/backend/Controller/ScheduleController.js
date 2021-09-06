@@ -13,9 +13,9 @@ export const createSchedule = async (httpreq, httpres) => {
     const creator = await RepresentativeModel.findById({
       _id: postedSchedule.createdby,
     });
-    creator.postedSchedules.push(schedule);
-    await creator.save();
-
+    creator.postedSchedules.push(schedule);  
+    await creator.save();   
+     
     if (schedule) {
       return httpres.status(201).json({ message: "Schedule Created" });
     } else {
@@ -29,8 +29,8 @@ export const createSchedule = async (httpreq, httpres) => {
 };
 
 
-export const deleteProfile = async (httpreq, httpres) => {
-  try {
+export const deleteSchedule = async (httpreq, httpres) => {
+  try {  
     const getparams = httpreq.query.id;
 
     const finalParameter = getparams.slice(10, getparams.length - 2);

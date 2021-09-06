@@ -9,6 +9,7 @@ dotenv.config()
 // Signup Controller 
 
 export  const Signup = async (httprequest, httpresponse)=>{
+  console.log("register request is comming")
 
     try {
 
@@ -85,12 +86,14 @@ export  const Signup = async (httprequest, httpresponse)=>{
 
 
 
-
+ 
 
 // Login Controller
 
 export  const Login = async (httprequest, httpresponse)=>{
-
+  console.log("login request is comming")
+  console.log(httprequest.body);
+  
   try{
       const {emailAddress , password} = httprequest.body;
 
@@ -121,7 +124,7 @@ export  const Login = async (httprequest, httpresponse)=>{
       }
 
   }catch(error_occured){
-      console.log(error_occured);
+      return httpresponse.status(403).send("email or password incorrect");
   }
 
 

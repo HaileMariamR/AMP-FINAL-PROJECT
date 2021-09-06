@@ -15,8 +15,9 @@ class ClientAuthDataProvider {
     User getCurrentUser = User("", "");
     try {
       final httpresponse = await http.post(
-          Uri.parse('$API_URL/RegisterUser'),
-          body: user.tojson());
+        Uri.parse('$API_URL/RegisterUser'),
+        body: user.tojson(),
+      );
       if (httpresponse.statusCode == 201) {
         var incommingvalue = jsonDecode(httpresponse.body);
         getCurrentUser = User(
@@ -35,15 +36,13 @@ class ClientAuthDataProvider {
 
     return getCurrentUser;
   }
-
+ 
 // Login DataProvider
 
   static Future<Map<String, dynamic>> login(LoginModel loginModel) async {
     var finalvalue;
-
     try {
-      final httpresponse = await http.post(
-          Uri.parse('http://localhost:3500/api/LoginUser'),
+      final httpresponse = await http.post(Uri.parse('$API_URL/LoginUser'),
           body: loginModel.tojson());
 
       if (httpresponse.statusCode == 200) {
@@ -69,7 +68,7 @@ class ClientAuthDataProvider {
       print(accesstoken);
 
       final httpresponse = await http.delete(
-        Uri.parse('http://localhost:3500/api/DeleteProfile'),
+        Uri.parse('$API_URL/DeleteProfile'),
         body: {
           "emailAddress": user.tojson()['emailAddress'],
         },

@@ -66,25 +66,25 @@ class _AddScheduleState extends State<AddSchedule> {
             Expanded(
                 child: CustomTextField(
               textEditingController: controller2,
-              hinttext: "Enter first Schedule",
+              labelText: "Enter first Schedule",
               icondata: Icon(Icons.schedule),
             )),
             Expanded(
                 child: CustomTextField(
               textEditingController: controller3,
-              hinttext: "Enter second Schedule",
+              labelText: "Enter second Schedule",
               icondata: Icon(Icons.schedule),
             )),
             Expanded(
                 child: CustomTextField(
               textEditingController: controller4,
-              hinttext: "Enter third Schedule",
+              labelText: "Enter third Schedule",
               icondata: Icon(Icons.schedule),
             )),
             Expanded(
                 child: CustomTextField(
               textEditingController: controller5,
-              hinttext: "Enter fourth Schedule",
+              labelText: "Enter fourth Schedule",
               icondata: Icon(Icons.schedule),
             )),
             Expanded(

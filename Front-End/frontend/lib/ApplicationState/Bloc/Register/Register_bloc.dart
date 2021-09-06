@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/ApplicationState/Bloc/Register/Register_event.dart';
 import 'package:frontend/Repository/MainRepository.dart';
@@ -6,7 +5,7 @@ import 'blocs.dart';
 import 'package:frontend/Models/models.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  RegisterBloc() : super(RegisterState());
+  RegisterBloc() : super(RegisterIntial());
 
   @override
   Stream<RegisterState> mapEventToState(RegisterEvent event) async* {
@@ -21,9 +20,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           yield FailedToRegister();
         } else if (incommingValue['emailAddress'] != '') {
           yield Registered(newuser);
+          await Future.delayed(Duration(seconds: 2));
+          yield RegisterIntial();
+
+
         }
       } catch (e) {
         yield FailedToRegister();
+        await Future.delayed(Duration(seconds: 2));
+        yield RegisterIntial();
       }
     }
   }

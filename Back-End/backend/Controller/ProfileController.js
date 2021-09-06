@@ -22,7 +22,7 @@ export const updateProfile = async (httpreq, httpres) =>{
 
 // Delete User Account
 
-export const  deletePofile = async (httpreq, httpres)=> {
+export const  deleteProfile = async (httpreq, httpres)=> {
 
   
 

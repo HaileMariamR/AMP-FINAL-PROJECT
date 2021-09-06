@@ -6,7 +6,7 @@ class RegisterState extends Equatable {
   @override
   List<Object?> get props => [];
 }
-
+class RegisterIntial extends RegisterState{}
 class Registering extends RegisterState {}
 
 class FailedToRegister extends RegisterState {}

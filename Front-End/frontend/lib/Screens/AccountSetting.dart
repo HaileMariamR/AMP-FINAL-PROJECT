@@ -23,7 +23,7 @@ class AccountSetting extends StatelessWidget {
       body: Container(
         child: BlocBuilder(
             bloc: currentLoggedInState,
-            builder: (BuildContext context, currentLoggedInState state) {
+            builder: (BuildContext context, state) {
               print("rebuild");
               if (state is Logedin) {
                 return Column(

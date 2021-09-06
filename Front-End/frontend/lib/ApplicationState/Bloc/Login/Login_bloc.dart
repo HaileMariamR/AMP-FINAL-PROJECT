@@ -4,7 +4,7 @@ import 'blocs.dart';
 import 'package:frontend/Models/models.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginState());
+  LoginBloc() : super(LoggedOut());
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
@@ -26,6 +26,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield Logedin(user, incommingvalue['access_token']);
       } catch (e) {
         yield FaildLoging();
+        await Future.delayed(Duration(seconds: 2));
+        yield LoggedOut();
       }
     }
 

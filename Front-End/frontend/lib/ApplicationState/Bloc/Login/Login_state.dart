@@ -6,7 +6,7 @@ class LoginState extends Equatable {
   @override
   List<Object?> get props => [];
 }
-
+class LoggedOut extends LoginState{}
 class Loging extends LoginState {}
 
 class FaildLoging extends LoginState {}

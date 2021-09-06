@@ -3,9 +3,8 @@ import 'screens.dart';
 import 'package:frontend/Widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget { 
   HomePage({Key? key}) : super(key: key);
-
   final List<String> image_list = [
     "https://i.pinimg.com/236x/18/3a/a8/183aa8c43002bd1ea592211dc1baf87c.jpg",
     "https://i.pinimg.com/236x/33/00/d3/3300d3068ea887185ff025eb9ad7fd43.jpg",
@@ -16,6 +15,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orangeAccent.withAlpha(200),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
                 .toList(),
           )),
           Hero(
-            tag: "heroTag",
+            tag: "loginTag",
             child: CustomRoundButton(
               onPressedfun: () {
                 Navigator.push(

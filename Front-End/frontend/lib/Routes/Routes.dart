@@ -25,6 +25,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => AllSubscription());
       case '/detailpage':
         return MaterialPageRoute(builder: (context) => DetailPage());
+      case WellcomeScreen.routeName:
+        return MaterialPageRoute(builder: (context) => WellcomeScreen());
+
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();
