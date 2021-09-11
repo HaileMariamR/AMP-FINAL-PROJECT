@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:frontend/Models/Schedule.dart';
@@ -9,7 +8,7 @@ class SchedulesDataProvovider {
     dynamic schedules;
     try {
       final httpresponse = await http.get(
-        Uri.parse('http://localhost:3500/api/getallSchedules'),
+        Uri.parse('http://localhost:4000/api/getallSchedules'),
       );
 
       if (httpresponse.statusCode == 200) {
@@ -23,16 +22,25 @@ class SchedulesDataProvovider {
   }
 
   static Future<dynamic> createSchedule(Schedule schedule) async {
-    var responsemessage = "";
+    dynamic responsemessage;
 
     try {
-      print(schedule.tojson());
-      final response = await http
-          .post(Uri.parse('http://localhost:3500/api/createSchedule'), body: {
-        'createdby': schedule.createdby.toString(),
-        'programs': schedule.allprograms.toString(),
-      });
-      responsemessage = jsonDecode(response.body).toString();
+      final response = await http.post(
+        Uri.parse('http://localhost:4000/api/createSchedule'),
+        body: {
+          "title": schedule.title,
+          "description": schedule.description,
+          "createdby": schedule.createdby,
+          "programs": schedule.allprograms.toString()
+        },
+      );
+      if (response.statusCode == 403) {
+        responsemessage = {"Errormessage": response.body};
+      } else if (response.statusCode == 201) {
+        print(response.body);
+        responsemessage = jsonDecode(response.body);
+      } else
+        responsemessage = response.body;
     } catch (e) {
       print(e.toString());
     }

@@ -7,7 +7,7 @@ class WellcomeScreen extends StatelessWidget {
   static const String routeName = "/wellcome";
   @override
   Widget build(BuildContext context) {
-    Timer(Duration(seconds: 2), () => Navigator.pushNamed(context, '/'));
+    Timer(Duration(seconds: 4), () => Navigator.pushNamed(context, '/'));
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -27,18 +27,22 @@ class WellcomeScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text(
-                  "Hollyplace Scheduler ",
-                  style: TextStyle(
-                    fontFamily: 'Pacifico',
-                    fontSize: 40,
+                Expanded(
+                  child: Text(
+                    "Hollyplace Scheduler ",
+                    style: TextStyle(
+                      fontFamily: 'Pacifico',
+                      fontSize: 40,
+                    ),
                   ),
                 ),
-                Text(
-                  'app',
-                  style: TextStyle(
-                    fontFamily: 'Pacifico',
-                    fontSize: 40,
+                Expanded(
+                  child: Text(
+                    'app',
+                    style: TextStyle(
+                      fontFamily: 'Pacifico',
+                      fontSize: 40,
+                    ),
                   ),
                 ),
               ],

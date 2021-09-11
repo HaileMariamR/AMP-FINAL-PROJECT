@@ -15,3 +15,4 @@ class AddingScheduleEvent extends ScheduleEvent {
   @override
   List<Object?> get props => [];
 }
+class GetInitialState extends ScheduleEvent{}

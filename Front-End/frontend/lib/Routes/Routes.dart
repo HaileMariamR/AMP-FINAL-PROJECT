@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/Models/User.dart';
 import 'package:frontend/Screens/AddHolyplace.dart';
 import 'package:frontend/Screens/AllSubscription.dart';
-import 'package:frontend/Screens/DetailPage.dart';
 import 'package:frontend/Screens/screens.dart';
 
 class RouteGenerator {
@@ -23,8 +23,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => AccountSetting());
       case '/allscubscription':
         return MaterialPageRoute(builder: (context) => AllSubscription());
-      case '/detailpage':
-        return MaterialPageRoute(builder: (context) => DetailPage());
+      // case '/detailpage':
+      //   return MaterialPageRoute(builder: (context) => DetailPage());
       case WellcomeScreen.routeName:
         return MaterialPageRoute(builder: (context) => WellcomeScreen());
 
@@ -46,4 +46,11 @@ class RouteGenerator {
       );
     });
   }
+}
+
+class AuthArgument {
+  final User? user;
+  final bool update;
+
+  AuthArgument({this.user, required this.update});
 }

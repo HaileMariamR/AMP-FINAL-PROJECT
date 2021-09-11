@@ -4,7 +4,6 @@ import 'package:frontend/Models/User.dart';
 
 class AuthRepository {
   //Register Repo
-  
 
   static Future<User> RegisterUserRepo(User user) async {
     print("passed auth repo");
@@ -19,11 +18,12 @@ class AuthRepository {
     return await ClientAuthDataProvider.login(loginModel);
   }
 
-
-
   //Delete repo
   static Future<String> DeleteUserRepo(User user, String accesstoken) async {
     print("Delete User Repo!");
     return await ClientAuthDataProvider.deleteaccount(user, accesstoken);
+  }
+  static Future<String> updateAccount(User user)async{
+    return await ClientAuthDataProvider.update(user);
   }
 }

@@ -1,1 +1,14 @@
-GET http://localhost:3500/api
+GET http://localhost:4000/api/getallsubscriptions/613938c91d659ca70622f961
+
+###
+GET http://localhost:4000/api/getallusers
+###
+PUT http://localhost:4000/api/updateProfile
+Content-Type: application/json
+
+{
+    "emailAddress":"emailAddress",
+    "fullName":"dave",
+    "userName":"daveSange",
+    "password":"dave"
+}

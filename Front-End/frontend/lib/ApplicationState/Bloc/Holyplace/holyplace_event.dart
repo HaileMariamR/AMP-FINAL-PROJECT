@@ -7,7 +7,7 @@ class HolyPlaceEvent extends Equatable {
 }
 
 class LoadingHolyPlacesEvent extends HolyPlaceEvent {}
-
+class GetIntialState extends HolyPlaceEvent{}
 class createHolyplaceEvent extends HolyPlaceEvent {
   final HolyplaceModel holyplaceModel;
   createHolyplaceEvent(this.holyplaceModel);

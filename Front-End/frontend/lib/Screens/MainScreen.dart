@@ -5,6 +5,9 @@ import 'package:frontend/ApplicationState/Bloc/Holyplace/holyplace_bloc.dart';
 import 'package:frontend/ApplicationState/Bloc/Login/blocs.dart';
 import 'package:frontend/ApplicationState/Bloc/Schedule/blocs.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:frontend/ApplicationState/Bloc/subscription/subscription_bloc.dart';
+import 'package:frontend/Models/models.dart';
+import 'package:frontend/Screens/DetailPage.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -63,69 +66,86 @@ class _MainScreenState extends State<MainScreen> {
               )),
           actions: [
             Container(
-              child: GestureDetector(
-                child: Icon(
-                  Icons.notification_add,
-                  color: Colors.red,
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, '/allscubscription');
+              child: BlocBuilder<LoginBloc, LoginState>(
+                builder: (context, state) {
+                  if (state is Logedin) {
+                    return GestureDetector(
+                      child: Icon(
+                        Icons.notification_add,
+                        color: Colors.red,
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/allscubscription');
+                      },
+                    );
+                  }
+                  return Container();
                 },
               ),
             ),
             Container(
               margin: EdgeInsets.only(right: 10),
-              child: PopupMenuButton(
-                  onSelected: (value) {
-                    switch (value) {
-                      case 1:
-                        currentLoginState.add(LogoutEvent());
-                        Navigator.pushNamed(context, '/');
-                        break;
-                      case 2:
-                        Navigator.pushNamed(context, "/accountsettings");
-                        break;
-                      case 3:
-                        Navigator.pushNamed(context, "/allscubscription");
-                        break;
-                    }
-                  },
-                  offset: Offset(5, 50),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  color: Color(0xff757575),
-                  elevation: 10,
-                  icon: Icon(
-                    Icons.circle,
-                    size: 40,
-                    color: Colors.blueGrey,
-                  ),
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                          value: 1,
-                          child: Text(
-                            "logout",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          )),
-                      PopupMenuItem(
-                        value: 2,
-                        child: Text(
-                          "my Account",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white),
+              child: BlocBuilder<LoginBloc, LoginState>(
+                builder: (context, state) {
+                  if (state is Logedin) {
+                    return PopupMenuButton(
+                        onSelected: (value) {
+                          switch (value) {
+                            case 1:
+                              currentLoginState.add(LogoutEvent());
+                              Navigator.pushNamed(context, '/');
+                              break;
+                            case 2:
+                              Navigator.pushNamed(context, "/accountsettings");
+                              break;
+                            case 3:
+                              BlocProvider.of<SubscriptionBloc>(context)
+                                  .add(GetlAllSubscriptions(id: state.loggedinUserinfo.id!));
+
+                              Navigator.pushNamed(context, "/allscubscription");
+                              break;
+                          }
+                        },
+                        offset: Offset(5, 50),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        color: Color(0xff757575),
+                        elevation: 10,
+                        icon: Icon(
+                          Icons.circle,
+                          size: 40,
+                          color: Colors.blueGrey,
                         ),
-                      ),
-                      PopupMenuItem(
-                          value: 3,
-                          child: Text(
-                            "All Subscription ",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          ))
-                    ];
-                  }),
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                                value: 1,
+                                child: Text(
+                                  "logout",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                            PopupMenuItem(
+                              value: 2,
+                              child: Text(
+                                "my Account",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            PopupMenuItem(
+                                value: 3,
+                                child: Text(
+                                  "All Subscription ",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white),
+                                ))
+                          ];
+                        });
+                  }
+                  return Container();
+                },
+              ),
             )
           ],
         ),
@@ -133,15 +153,16 @@ class _MainScreenState extends State<MainScreen> {
           child: BlocBuilder(
             bloc: holyplacesstate,
             builder: (BuildContext context, HolyPlaceState state) {
-              if (state is LoadingSchedules) {
-                return SpinKitDualRing(
-                  color: Colors.black,
-                  size: 50,
+              if (state is LoadingHolyPlaces) {
+                return Center(
+                  child: SpinKitDualRing(
+                    color: Colors.black,
+                    size: 50,
+                  ),
                 );
               }
 
               if (state is OnHolyPlaceLoadSuccess) {
-                // return Text("${state.allschedules.toString()}");
                 return Container(
                   margin: EdgeInsets.only(top: 10),
                   child: ListView.builder(
@@ -149,54 +170,171 @@ class _MainScreenState extends State<MainScreen> {
                     itemBuilder: (context, int index) {
                       return Container(
                         padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.all(10),
+                        margin: EdgeInsets.all(15),
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height / 2,
                         child: Card(
+                          elevation: 15,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Expanded(
                                 child: Text(
-                                  "${state.allholyplaces[index]['name'].toString()}",
+                                  "${state.allholyplaces[index]['name']}",
                                   textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.pinkAccent,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 25),
                                 ),
                               ),
-                              Expanded(
-                                child: Image.network(
-                                    (state.allholyplaces[index]['image'] !=
-                                            null)
-                                        ? state.allholyplaces[index]['image']
-                                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROGVlwDhbC-6RixbdgEwDrABJ6BD3hhM2eJA&usqp=CAU",
-                                    errorBuilder: (context, Object exception,
-                                        StackTrace? stackTrace) {
-                                  return const Text('Sorry Image not found ');
-                                }),
-                              ),
-                              Expanded(
-                                  child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/detailpage');
-                                },
-                                child: Text(
-                                  "more ...",
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              )),
                               Expanded(
                                 child: Container(
-                                  child: ElevatedButton(
-                                    child: Text("Subscribe"),
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.red,
-                                    ),
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
+                                  child: Image.network(
+                                      (state.allholyplaces[index]['image'] !=
+                                              null)
+                                          ? state.allholyplaces[index]['image']
+                                          : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROGVlwDhbC-6RixbdgEwDrABJ6BD3hhM2eJA&usqp=CAU",
+                                      fit: BoxFit.cover, errorBuilder: (context,
+                                          Object exception,
+                                          StackTrace? stackTrace) {
+                                    return const Text('Sorry Image not found ');
+                                  }),
                                 ),
-
-                              )
+                              ),
+                              BlocBuilder<LoginBloc, LoginState>(
+                                builder: (context, ontapState) {
+                                  if (ontapState is Logedin) {
+                                    return Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          print(
+                                              "representative ${state.allholyplaces[index]['createdby']}");
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => DetailPage(
+                                                  hollyplace: state
+                                                      .allholyplaces[index],
+                                                  userId: ontapState
+                                                      .loggedinUserinfo.id!,
+                                                  subscribed: state
+                                                      .allholyplaces[index]
+                                                          ['createdby']
+                                                          ['allsubscriber']
+                                                      .contains(ontapState
+                                                          .loggedinUserinfo
+                                                          .id)),
+                                            ),
+                                          );
+                                          // Navigator.pushNamed(
+                                          //   context,
+                                          //   '/detailpage',
+                                          // );
+                                        },
+                                        child: Text(
+                                          "more ...",
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return Container();
+                                },
+                              ),
+                              BlocListener<SubscriptionBloc, SubscriptionState>(
+                                listener: (_, subState) {
+                                  if (subState is Subscribed) {
+                                    // ScaffoldMessenger.of(context).showSnackBar(
+                                    //   SnackBar(
+                                    //     elevation: 10,
+                                    //     duration:Duration(seconds: 2),
+                                    //     content: Text(
+                                    //       "Subscirption sucess",
+                                    //       style: TextStyle(
+                                    //           backgroundColor: Colors.green),
+                                    //     ),
+                                    //   ),
+                                    // );
+                                    BlocProvider.of<HolyPlaceBloc>(context)
+                                        .add(LoadingHolyPlacesEvent());
+                                  }
+                                },
+                                child: BlocBuilder<LoginBloc, LoginState>(
+                                  builder: (context, logedInState) {
+                                    if (logedInState is Logedin) {
+                                      return Expanded(
+                                        child: Container(
+                                          child: ElevatedButton(
+                                            child: state.allholyplaces[index]
+                                                        ['createdby']
+                                                        ['allsubscriber']
+                                                    .contains(logedInState
+                                                        .loggedinUserinfo.id)
+                                                ? Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Icon(Icons.check),
+                                                      Text("subscribed")
+                                                    ],
+                                                  )
+                                                : Text("Subscribe"),
+                                            onPressed:
+                                                state.allholyplaces[index]
+                                                            ['createdby']
+                                                            ['allsubscriber']
+                                                        .contains(logedInState
+                                                            .loggedinUserinfo
+                                                            .id)
+                                                    ? () {}
+                                                    : () {
+                                                        print(
+                                                            "allHolyPlaces: ${state.allholyplaces}");
+                                                        User currentUser =
+                                                            logedInState
+                                                                .loggedinUserinfo;
+                                                        BlocProvider.of<
+                                                                    SubscriptionBloc>(
+                                                                context)
+                                                            .add(
+                                                          Subscribe(
+                                                            subscriptionModel:
+                                                                SubscriptionModel(
+                                                                    state.allholyplaces[index]
+                                                                            [
+                                                                            'createdby']
+                                                                        ['_id'],
+                                                                    currentUser
+                                                                        .id),
+                                                          ),
+                                                        );
+                                                      },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: state
+                                                      .allholyplaces[index]
+                                                          ['createdby']
+                                                          ['allsubscriber']
+                                                      .contains(logedInState
+                                                          .loggedinUserinfo.id)
+                                                  ? Colors.blueAccent
+                                                  : Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         ),
