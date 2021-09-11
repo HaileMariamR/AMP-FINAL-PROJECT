@@ -1,44 +1,47 @@
+import 'package:frontend/Utilities/Constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:frontend/Models/models.dart';
 
 class HolyPlaceDataProvovider {
   static Future<dynamic> getAllHolyplaces() async {
-    List holyplaces = [];
+    dynamic holyplaces = [];
 
     try {
       final httpresponse = await http.get(
-        Uri.parse('http://localhost:3500/api/getallholyplaces'),
+        Uri.parse('$API_URL/getallholyplaces'),
       );
 
       if (httpresponse.statusCode == 200) {
         var finalresult = jsonDecode(httpresponse.body);
         holyplaces = finalresult['holyplaces'];
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
 
     return holyplaces;
   }
 
   static Future<dynamic> createHolyPlace(HolyplaceModel holyplaceModel) async {
-    var responsemessage = "";
+    dynamic responsemessage;
 
     try {
       print("on dataprovider");
 
-      final response = await http
-          .post(Uri.parse('http://localhost:3500/api/createHolyPlace'), body: {
-        'createdby': holyplaceModel.createtor_id.toString(),
-        'name': holyplaceModel.nameofholyplace.toString(),
-        'location': holyplaceModel.location.toString(),
-        'history': holyplaceModel.history.toString(),
-        'image': holyplaceModel.imageUrl.toString()
-      });
-      print(holyplaceModel.createtor_id);
-      responsemessage = jsonDecode(response.body).toString();
-      print("response: $responsemessage");
+      final response = await http.post(
+        Uri.parse('http://localhost:4000/api/createHolyPlace'),
+        body: holyplaceModel.tojson(),
+      );
+      if (response.statusCode == 201) {
+        responsemessage = {"message": jsonDecode(response.body)['message']};
+      }
+
+       else {
+        responsemessage = "Failed!";
+      }
     } catch (e) {
-      print(e.toString());
+      responsemessage = "Failed";
     }
     return responsemessage;
   }

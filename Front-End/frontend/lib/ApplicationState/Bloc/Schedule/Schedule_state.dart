@@ -29,4 +29,10 @@ class onAddingScheduleSucess extends ScheduleState {
   List<Object?> get props => [responsemessage];
 }
 
-class FailedtoAddSchedule extends ScheduleState {}
+class FailedtoAddSchedule extends ScheduleState {
+  final String message;
+
+  FailedtoAddSchedule(this.message);
+}
+
+class SchedulesIntialState extends ScheduleState {}
