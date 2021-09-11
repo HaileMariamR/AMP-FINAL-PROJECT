@@ -1,12 +1,11 @@
 import ScheduleModel from "../Models/Schedule.js";
+import UserModel from "../Models/User.js";
 import RepresentativeModel  from "../Models/Representative.js";
-import HolyPlaceModel from "../Models/Holyplace.js"
 
 export const createSchedule = async (httpreq, httpres) => {
-  console.log("create schedule request is comming");
+  
   try {
     const postedSchedule = httpreq.body;
-    console.log(postedSchedule)
     const schedule = new ScheduleModel(postedSchedule);
     await schedule.save();
     console.log(schedule);
@@ -14,12 +13,6 @@ export const createSchedule = async (httpreq, httpres) => {
     const creator = await RepresentativeModel.findById({
       _id: postedSchedule.createdby,
     });
-    console.log("creater is found")
-    const holyplace = await HolyPlaceModel.findOne({"createdby":postedSchedule.createdby})
-    if(holyplace == null){
-      console.log("You haven not added hollyplace")
-      return httpres.status(403).send("You haven't added hollyplace")
-    }
     creator.postedSchedules.push(schedule);  
     await creator.save();   
      

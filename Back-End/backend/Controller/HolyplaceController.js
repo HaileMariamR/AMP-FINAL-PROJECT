@@ -7,17 +7,16 @@ import RepresentativeModel from '../Models/Representative.js';
 
 
 export const createHolyPlace = async (httpreq, httpres) => {
+
     try {
- 
+
       const getHolyPlaceInfo = httpreq.body;
       const holyplace = new HolyPlaceModel(getHolyPlaceInfo);
-      console.log(`holyplace ${holyplace}`)
-      
+  
       const creator = await RepresentativeModel.findById({
 
         _id: getHolyPlaceInfo.createdby,
       });
-      console.log(`create ${creator}`)
       if(creator == null){
         return httpres
         .status(400)
@@ -30,16 +29,14 @@ export const createHolyPlace = async (httpreq, httpres) => {
             await holyplace.save();
 
             await creator.save();
-            console.log("holyplace Created")
             return httpres.status(201).json({ message: "holyplace Created" });         
           }
           else {
-            console.log("You have already created hollyplace")
             return httpres
 
               .status(400)
 
-              .json({ message: "You have already created hollyplace" });
+              .json({ message: "Sorry Failed to Create holyplace." });
           }
         
       } 
@@ -59,7 +56,8 @@ export const createHolyPlace = async (httpreq, httpres) => {
   export const getAllHolyPlaces = async (httpreq, httpres) => {
     try {
       const holyplaces = await HolyPlaceModel.find();
-      if (holyplaces) {
+
+      if (holyplaces != null) {
           
           const lastholyplace = holyplaces.length - 1;
         
@@ -72,8 +70,10 @@ export const createHolyPlace = async (httpreq, httpres) => {
           });
 
           holyplace.createdby = creator;
-          await holyplace.save();
+
           if(index == lastholyplace){
+
+            console.log(holyplaces);
 
             return httpres.status(200).json({ holyplaces:  holyplaces });
 

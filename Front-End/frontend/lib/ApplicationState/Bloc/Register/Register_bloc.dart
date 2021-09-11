@@ -17,33 +17,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         print(newuser.tojson());
         var incommingValue = newuser.tojson();
         if (incommingValue['emailAddress'] == '') {
-          yield AccountUpdateRegsiterFailed(message: "Failed to register");
+          yield FailedToRegister();
         } else if (incommingValue['emailAddress'] != '') {
           yield Registered(newuser);
           await Future.delayed(Duration(seconds: 2));
           yield RegisterIntial();
+
+
         }
       } catch (e) {
-        yield AccountUpdateRegsiterFailed(message: "Failed to register");
-        await Future.delayed(Duration(seconds: 2));
-        yield RegisterIntial();
-      }
-    }
-    if (event is UpdateAccount) {
-      yield Registering();
-      try {
-        var message = await AuthRepository.updateAccount(event.user);
-        print("update message:$message");
-        if (message != "") {
-          yield AccountUpdated(message: message);
-        } else {
-          yield AccountUpdateRegsiterFailed(
-              message: "Failed to Update Account");
-          await Future.delayed(Duration(seconds: 2));
-          yield RegisterIntial();
-        }
-      } catch (e) {
-        yield AccountUpdateRegsiterFailed(message: e.toString());
+        yield FailedToRegister();
         await Future.delayed(Duration(seconds: 2));
         yield RegisterIntial();
       }

@@ -9,20 +9,14 @@ const ScheduleFields = {
     ref:'Representative',
     required: true,
   },
-  title:{
-    type:String,
-    required:true,
-  },
-  description:{
-    type:String,
-    required:true,
-  },
+  
   dateofcreation: {
     type: Date,
     default: Date.now,
   },
   programs: [{
     type: String,
+    default: null,
     required: true,
   }],
 

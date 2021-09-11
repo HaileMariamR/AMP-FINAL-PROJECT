@@ -3,41 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/ApplicationState/Bloc/Register/blocs.dart';
-import 'package:frontend/Routes/Routes.dart';
 import 'package:frontend/Widgets/widgets.dart';
 import 'package:frontend/Models/models.dart';
 
-class RegisterController extends StatefulWidget {
-  const RegisterController({Key? key, required this.argument})
-      : super(key: key);
-  final AuthArgument argument;
+class RegisterController extends StatelessWidget {
+  const RegisterController({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<RegisterBloc>(
+      create: (_) => RegisterBloc(),
+      child: Register(),
+    );
+  }
+}
+
+class Register extends StatefulWidget {
+  const Register({Key? key}) : super(key: key);
+
   @override
   _RegisterState createState() => _RegisterState();
 }
 
-class _RegisterState extends State<RegisterController> {
+class _RegisterState extends State<Register> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPassword = TextEditingController();
   final fullNameCont = TextEditingController();
   final userNameCont = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> _user = {};
-
   String roleDropDownValue = 'User';
   @override
   Widget build(BuildContext context) {
-    final bool isUpdate = widget.argument.update;
-    final User user = widget.argument.user!;
-    if (isUpdate) {
-      emailController.text = user.emailAddress!;
-      fullNameCont.text = user.fullName!;
-      userNameCont.text = user.userName!;
-      roleDropDownValue = user.userRole!;
-    }
     return Scaffold(
       appBar: AppBar(
-          title: Text(isUpdate ? "Update Account" : "Register"),
+          title: Text("Register"),
           iconTheme: IconThemeData(color: Colors.black87),
           backgroundColor: Colors.white),
       body: Center(
@@ -57,10 +56,10 @@ class _RegisterState extends State<RegisterController> {
                     Container(
                       padding: EdgeInsets.fromLTRB(15, 110, 0, 0),
                       child: Text(
-                        isUpdate ? 'Update Account' : 'Sign Up',
+                        'Sign Up',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: isUpdate ? 30 : 50,
+                          fontSize: 50,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Montserrat',
                         ),
@@ -74,7 +73,7 @@ class _RegisterState extends State<RegisterController> {
                           fontSize: 80,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Montserrat',
-                          color: isUpdate ? Colors.yellow : Colors.green,
+                          color: Colors.green,
                         ),
                       ),
                     ),
@@ -88,7 +87,7 @@ class _RegisterState extends State<RegisterController> {
                       CustomTextField(
                         isValid: (value) {
                           if (!EmailValidator.validate(value!)) {
-                            return "Email is not correct";
+                            return "Email is nott correct";
                           }
                           return null;
                         },
@@ -181,18 +180,11 @@ class _RegisterState extends State<RegisterController> {
                       BlocConsumer<RegisterBloc, RegisterState>(
                         listener: (_, state) {
                           if (state is Registered) {
-                            print("Register success");
-                          }
-                          if (state is AccountUpdated) {
-                            print("Account update success");
-                          }
-                          if (state is Registered || state is AccountUpdated) {
                             emailController.text = "";
                             fullNameCont.text = "";
                             userNameCont.text = "";
                             passwordController.text = "";
                             confirmPassword.text = "";
-                            Navigator.pushNamed(context, '/');
                           }
                         },
                         builder: (_, state) {
@@ -205,12 +197,9 @@ class _RegisterState extends State<RegisterController> {
                           if (state is Registered) {
                             return Text("Signup Sucess! go back and login");
                           }
-                          if (state is AccountUpdated) {
-                            return Text("Update Sucess! go back and login");
-                          }
-                          if (state is AccountUpdateRegsiterFailed) {
+                          if (state is FailedToRegister) {
                             return Text(
-                              "${state.message}",
+                              "Failed!",
                               style: TextStyle(
                                   color: Colors.redAccent, fontSize: 25),
                             );
@@ -221,7 +210,7 @@ class _RegisterState extends State<RegisterController> {
                               onPressedfun: () async {
                                 var form = _formKey.currentState;
                                 if (form!.validate()) {
-                                  User user = User(
+                                  User newuser = User(
                                     emailController.text,
                                     passwordController.text,
                                     userName: userNameCont.text,
@@ -231,18 +220,15 @@ class _RegisterState extends State<RegisterController> {
                                     confirmPassword: confirmPassword.text,
                                   );
 
-                                  RegisterEvent registerOrUpdateEvent = isUpdate
-                                      ? UpdateAccount(user: user)
-                                      : RegisteringUser(user);
-
+                                  RegisterEvent registerEvent =
+                                      RegisteringUser(newuser);
                                   BlocProvider.of<RegisterBloc>(context)
-                                      .add(registerOrUpdateEvent);
+                                      .add(registerEvent);
                                 }
                               },
-                              backroundcolor:
-                                  isUpdate ? Colors.yellow : Colors.blue,
+                              backroundcolor: Colors.blue,
                               displaytext: Text(
-                                isUpdate ? "Update" : "Register",
+                                "Register",
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),

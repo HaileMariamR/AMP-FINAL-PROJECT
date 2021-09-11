@@ -1,20 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/Models/models.dart';
 import 'package:frontend/Repository/HolyplaceRepository.dart';
 import 'blocs.dart';
 
 class HolyPlaceBloc extends Bloc<HolyPlaceEvent, HolyPlaceState> {
-  HolyPlaceBloc() : super(HolyPlacesIntialState());
+  HolyPlaceBloc() : super(HolyPlaceState());
 
   @override
   Stream<HolyPlaceState> mapEventToState(HolyPlaceEvent event) async* {
     //LoadingHolyplace
-    if (event is GetIntialState) {
-      yield HolyPlacesIntialState();
-    }
+
     if (event is LoadingHolyPlacesEvent) {
       yield LoadingHolyPlaces();
       try {
         dynamic incommingvalue = await HolyPlaceRepository.getAllHolyplaces();
+        print(incommingvalue);
+
         yield OnHolyPlaceLoadSuccess(incommingvalue);
       } catch (e) {
         FaildtoLoadingHolyPlaces();
@@ -22,16 +23,12 @@ class HolyPlaceBloc extends Bloc<HolyPlaceEvent, HolyPlaceState> {
       }
     }
     if (event is createHolyplaceEvent) {
-      yield LoadingHolyPlaces();
       try {
-        print("before this");
         dynamic message =
             await HolyPlaceRepository.createHolyPlace(event.holyplaceModel);
-        print("Messgage $message");
-        if (message.runtimeType != String) {
-                    yield onCreateHolyPlaceSucess(message['message']);
-        } else
-          yield FaildtoCreateHolyplace();
+
+        print(message.toString());
+        yield onCreateHolyPlaceSucess(message);
       } catch (e) {
         yield FaildtoCreateHolyplace();
       }

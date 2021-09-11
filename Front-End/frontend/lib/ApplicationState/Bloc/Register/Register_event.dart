@@ -15,18 +15,3 @@ class RegisteringUser extends RegisterEvent {
   @override
   List<Object?> get props => [user];
 }
-
-class UpdateAccount extends RegisterEvent{
-    final User user;
-
-  UpdateAccount({required this.user});
-  @override
-  List<Object?> get props => [user];
-}
-class DeleteAccount extends RegisterEvent{
-      final User user;
-
-  DeleteAccount({required this.user});
-  @override
-  List<Object?> get props => [user];
-}

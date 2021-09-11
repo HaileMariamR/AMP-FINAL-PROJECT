@@ -36,26 +36,7 @@ class ClientAuthDataProvider {
 
     return getCurrentUser;
   }
-
-  //update
-  static Future<String> update(User user) async {
-    String message = "";
-    try {
-      final httpresponse = await http.put(
-        Uri.parse('$API_URL/UpdateProfile'),
-        body: user.tojson(),
-      );
-      if (httpresponse.statusCode == 201) {
-        message = httpresponse.body;
-        
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-
-    return message;
-  }
-
+ 
 // Login DataProvider
 
   static Future<Map<String, dynamic>> login(LoginModel loginModel) async {
@@ -63,6 +44,7 @@ class ClientAuthDataProvider {
     try {
       final httpresponse = await http.post(Uri.parse('$API_URL/LoginUser'),
           body: loginModel.tojson());
+
       if (httpresponse.statusCode == 200) {
         finalvalue = jsonDecode(httpresponse.body);
       } else if (httpresponse.statusCode == 400) {

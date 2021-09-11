@@ -2,7 +2,7 @@ import { Signup, Login , getallusers } from "../Controller/AuthController.js";
 import { deleteProfile, updateProfile } from "../Controller/ProfileController.js";
 import { createSchedule, deleteSchedule, getallSchedules, updateSchedule } from "../Controller/ScheduleController.js";
 import {createHolyPlace , getAllHolyPlaces} from "../Controller/HolyplaceController.js"
-import { Subscribe  , unSubscribe,getAllSubscriptions} from "../Controller/SubscriptionController.js";
+import { Subscribe  , unSubscribe} from "../Controller/SubscriptionController.js";
 import express from "express";
 import { VerifyCurrentToken } from "../Middleware/AuthMiddleware.js";
 
@@ -38,8 +38,9 @@ allroutes.get("/getallSchedules", getallSchedules);
 allroutes.post('/createHolyPlace' ,createHolyPlace );
 
 allroutes.get('/getallholyplaces' ,getAllHolyPlaces );
+
 // Subscription 
-allroutes.get('/getallsubscriptions/:id',getAllSubscriptions);
+
 allroutes.post('/subscribe' ,Subscribe );
 allroutes.post('/unsubscribe' ,unSubscribe );
 

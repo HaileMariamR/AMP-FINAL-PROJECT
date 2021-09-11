@@ -1,25 +1,21 @@
 class HolyplaceModel {
-  String? createdby;
-  String? name;
+  String? createtor_id;
+  String? nameofholyplace;
   String? location;
   String? history;
-  String? image;
+  String? imageUrl;
 
-  HolyplaceModel(this.createdby, this.name,
-      {this.location, this.history, this.image});
+  HolyplaceModel(this.createtor_id, this.nameofholyplace,
+      {this.location, this.history, this.imageUrl});
 
   factory HolyplaceModel.fromJson(Map<String, dynamic> json) {
     return HolyplaceModel(
-      json['creator_by'],
-      json['name'],
-      location:json['location'],
-      history:json['history'],
-      image:json['image'],
-      
+      json['creator_id'],
+      json['nameofholyplace'],
     );
   }
 
   Map<String, dynamic> tojson() {
-    return {"createdby": createdby, "name": name,"location": location,"history": history,"image": image};
+    return {"create_id": createtor_id, "nameofholyplace": nameofholyplace};
   }
 }

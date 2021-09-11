@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/ApplicationState/Bloc/subscription/subscription_bloc.dart';
 import 'package:frontend/Screens/screens.dart';
 import 'ApplicationState/Bloc/Login/blocs.dart';
+
 import 'ApplicationState/Bloc/Register/blocs.dart';
 import 'ApplicationState/Bloc/Schedule/blocs.dart';
 import 'ApplicationState/Bloc/Holyplace/blocs.dart';
@@ -24,9 +24,6 @@ class AppStarter extends StatelessWidget {
         BlocProvider<HolyPlaceBloc>(
           create: (BuildContext context) => HolyPlaceBloc(),
         ),
-        BlocProvider<SubscriptionBloc>(
-          create: (BuildContext context) => SubscriptionBloc(),
-        ),
         BlocProvider<ScheduleBloc>(
           create: (BuildContext context) => ScheduleBloc(),
         ),
@@ -40,7 +37,7 @@ class AppStarter extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Religious Daily Schedule Notifer app",
-        initialRoute: '/',
+        initialRoute: WellcomeScreen.routeName,
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );

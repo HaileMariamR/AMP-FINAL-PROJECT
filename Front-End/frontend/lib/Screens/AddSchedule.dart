@@ -1,186 +1,116 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:frontend/ApplicationState/Bloc/Login/blocs.dart';
-import 'package:frontend/ApplicationState/Bloc/Schedule/blocs.dart';
-import 'package:frontend/Models/Schedule.dart';
-import 'package:frontend/Widgets/Button.dart';
 import 'package:frontend/Widgets/CustomTextField.dart';
+import 'package:frontend/Widgets/Button.dart';
+import 'package:frontend/ApplicationState/Bloc/Schedule/blocs.dart';
+import 'package:frontend/Models/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/ApplicationState/Bloc/Login/blocs.dart';
 
-class AddSchedule extends StatelessWidget {
+class AddSchedule extends StatefulWidget {
   AddSchedule({Key? key}) : super(key: key);
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final programOneController = TextEditingController();
-  final programTwoController = TextEditingController();
-  final ProgramThreeController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+
+  @override
+  _AddScheduleState createState() => _AddScheduleState();
+}
+
+class _AddScheduleState extends State<AddSchedule> {
+  var controller1 = TextEditingController();
+
+  var controller2 = TextEditingController();
+
+  var controller3 = TextEditingController();
+
+  var controller4 = TextEditingController();
+
+  var controller5 = TextEditingController();
+
+   @override
+  void initState() {
+    final String text = controller1.text.toLowerCase();
+    controller1.value = controller1.value.copyWith(
+      text: text,
+      selection:
+          TextSelection(baseOffset: text.length, extentOffset: text.length),
+      composing: TextRange.empty,
+    );
+    super.initState();
+  }
+// remove all the resources the controller uses after the textField is removed from the widget tree
+   @override
+  void dispose() {
+    controller1.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    String userId = '';
-    LoginState userState = BlocProvider.of<LoginBloc>(context).state;
-    if (userState is Logedin) {
-      userId = userState.loggedinUserinfo.id!;
+    String userid = "";
+    String reponseMessage = "";
+    LoginState userstate = BlocProvider.of<LoginBloc>(context).state;
+    if (userstate is Logedin) {
+      userid = userstate.loggedinUserinfo.id.toString();
+    }
+
+    ScheduleState responsestate = BlocProvider.of<ScheduleBloc>(context).state;
+    if (responsestate is onAddingScheduleSucess) {
+      reponseMessage = responsestate.responsemessage.toString();
     }
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Add Schedule",
-          style: TextStyle(
-            fontSize: 20,
-            fontFamily: 'Montserrat',
-          ),
-        ),
-      ),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-          child: Card(
-            elevation: 10,
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Add Schedule",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.pinkAccent,
-                    fontFamily: 'Montserrat',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 100,
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomTextField(
-                        labelText: "title",
-                        textEditingController: titleController,
-                        icondata: Icon(Icons.title),
-                        isValid: (value) {
-                          if (value!.isEmpty) {
-                            return "provide consie title";
-                          }
-                          return null;
-                        },
-                      ),
-                      CustomTextField(
-                        labelText: "description",
-                        textEditingController: descriptionController,
-                        icondata: Icon(Icons.description),
-                        isValid: (value) {
-                          if (value!.isEmpty) {
-                            return "provide description";
-                          }
-                          return null;
-                        },
-                      ),
-                      CustomTextField(
-                        labelText: "program one,specify time",
-                        textEditingController: programOneController,
-                        icondata: Icon(Icons.schedule),
-                        isValid: (value) {
-                          if (value!.isEmpty) {
-                            return "this field is required";
-                          }
-                          return null;
-                        },
-                      ),
-                      CustomTextField(
-                        labelText: "program two,specify time",
-                        textEditingController: programTwoController,
-                        icondata: Icon(Icons.schedule),
-                        isValid: (value) {
-                          if (value!.isEmpty) {
-                            return "this field is required";
-                          }
-                          return null;
-                        },
-                      ),
-                      CustomTextField(
-                        labelText: "program three,specify time",
-                        textEditingController: ProgramThreeController,
-                        icondata: Icon(Icons.schedule),
-                        isValid: (value) {
-                          if (value!.isEmpty) {
-                            return "this field is required";
-                          }
-                          return null;
-                        },
-                      ),
-                      CustomRoundButton(
-                          backroundcolor: Colors.blue,
-                          displaytext: Text("Add Schdule"),
-                          onPressedfun: () {
-                            var form = _formKey.currentState;
-                            if (form!.validate()) {
-                              var schedule = Schedule(
-                                  userId,
-                                  [
-                                    programOneController.text,
-                                    programTwoController.text,
-                                    ProgramThreeController.text
-                                  ],
-                                  title: titleController.text,
-                                  description: descriptionController.text);
-                              BlocProvider.of<ScheduleBloc>(context)
-                                  .add(AddingScheduleEvent(schedule));
-                            }
-                          }),
-                    ],
-                  ),
-                ),
-                BlocConsumer<ScheduleBloc, ScheduleState>(
-                  listener: (context, state) {
-                    if (state is onAddingScheduleSucess) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          
-                          content: Text("Schedule added Successfully"),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                      Navigator.pop(context);
-                    }
-                  },
-                  builder: (_, state) {
-                    if (state is AddingSchedule) {
-                      return SpinKitDualRing(
-                        color: Colors.black,
-                        size: 50,
-                      );
-                    }
-                    if (state is FailedtoAddSchedule) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          
-                          Text(state.message),
-                          InkWell(
-                            onTap: ()=>BlocProvider.of<ScheduleBloc>(context).add(GetInitialState()),
-                            child: Text(" Try again",style: TextStyle(color: Colors.blue),))
-                                                  ,InkWell(
-                            onTap: ()=>Navigator.pop(context),
-                            child: Text(" back",style: TextStyle(color: Colors.pinkAccent),))
-
-                        ],
-                      );                    }
-                    return Container();
-                  },
-                ),
-              ],
+        appBar: AppBar(),
+        body: Column(
+          children: [
+            Expanded(
+              child: Text("Schedule Form"),
             ),
-          ),
-        ),
-      ),
-    );
+            Expanded(
+                child: CustomTextField(
+              textEditingController: controller2,
+              labelText: "Enter first Schedule",
+              icondata: Icon(Icons.schedule),
+            )),
+            Expanded(
+                child: CustomTextField(
+              textEditingController: controller3,
+              labelText: "Enter second Schedule",
+              icondata: Icon(Icons.schedule),
+            )),
+            Expanded(
+                child: CustomTextField(
+              textEditingController: controller4,
+              labelText: "Enter third Schedule",
+              icondata: Icon(Icons.schedule),
+            )),
+            Expanded(
+                child: CustomTextField(
+              textEditingController: controller5,
+              labelText: "Enter fourth Schedule",
+              icondata: Icon(Icons.schedule),
+            )),
+            Expanded(
+                child: CustomRoundButton(
+              backroundcolor: Colors.blue,
+              displaytext: Text("Add Schedule"),
+              onPressedfun: () {
+                Schedule schedule = Schedule("", []);
+                schedule.createdby = userid;
+                schedule.allprograms = [
+                  controller2.text.toString(),
+                  controller3.text.toString(),
+                  controller4.text.toString(),
+                  controller5.text.toString(),
+                ];
+
+                BlocProvider.of<ScheduleBloc>(context)
+                    .add(AddingScheduleEvent(schedule));
+
+                Navigator.pop(context);
+
+                final mysnackbar = SnackBar(content: Text("$reponseMessage"));
+                ScaffoldMessenger.of(context).showSnackBar(mysnackbar);
+              },
+            )),
+          ],
+        ));
   }
 }

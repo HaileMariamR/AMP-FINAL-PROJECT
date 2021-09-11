@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/Models/models.dart';
-import 'package:frontend/Routes/Routes.dart';
 import 'screens.dart';
 import 'package:frontend/Widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget { 
   HomePage({Key? key}) : super(key: key);
   final List<String> image_list = [
     "https://i.pinimg.com/236x/18/3a/a8/183aa8c43002bd1ea592211dc1baf87c.jpg",
@@ -28,7 +26,7 @@ class HomePage extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Pacifico',
-                fontSize: 23,
+                fontSize: 23,   
               ),
             ),
           ),
@@ -70,13 +68,9 @@ class HomePage extends StatelessWidget {
             child: CustomRoundButton(
               onPressedfun: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RegisterController(
-                      argument: AuthArgument(user: User("",""),update: false),
-                    ),
-                  ),
-                );
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegisterController()));
               },
               backroundcolor: Colors.blue,
               displaytext: Text(

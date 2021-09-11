@@ -6,7 +6,7 @@ class HolyPlaceState extends Equatable {
 }
 
 class LoadingHolyPlaces extends HolyPlaceState {}
-class HolyPlacesIntialState extends HolyPlaceState{}
+
 class OnHolyPlaceLoadSuccess extends HolyPlaceState {
   List<dynamic> allholyplaces;
 
